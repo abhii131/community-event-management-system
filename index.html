@@ -1,0 +1,140 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Community Event Management</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Community Event Management System</h1>
+
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="create-event.html">Create Event</a>
+    <a href="my-events.html">My Events</a>
+</header>
+
+<br>
+
+<input
+type="text"
+id="searchBox"
+placeholder="Search Events..."
+onkeyup="searchEvents()">
+
+<br><br>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Web Development Workshop</h2>
+        <p>Date: 25 June 2026</p>
+        <p>Location: College Hall</p>
+
+        <button onclick="registerEvent('Web Development Workshop')">
+            Register
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>AI Seminar</h2>
+        <p>Date: 28 June 2026</p>
+        <p>Location: Auditorium</p>
+
+        <button onclick="registerEvent('AI Seminar')">
+            Register
+        </button>
+    </div>
+
+    <div id="dynamicEvents"></div>
+
+</div>
+
+<script src="js/app.js"></script>
+
+<script>
+
+let events =
+JSON.parse(localStorage.getItem("allEvents")) || [];
+
+let container =
+document.getElementById("dynamicEvents");
+
+events.forEach(event => {
+
+container.innerHTML += `
+<div class="card">
+
+<h2>${event.name}</h2>
+
+<p>Date: ${event.date}</p>
+
+<p>Location: ${event.location}</p>
+
+<button onclick="registerEvent('${event.name}')">
+Register
+</button>
+
+<button onclick="deleteEvent('${event.name}')">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+function searchEvents(){
+
+let input =
+document.getElementById("searchBox")
+.value.toLowerCase();
+
+let cards =
+document.getElementsByClassName("card");
+
+for(let i=0;i<cards.length;i++){
+
+let text =
+cards[i].innerText.toLowerCase();
+
+if(text.includes(input)){
+cards[i].style.display="block";
+}
+else{
+cards[i].style.display="none";
+}
+
+}
+
+}
+
+function deleteEvent(eventName){
+
+let events =
+JSON.parse(localStorage.getItem("allEvents")) || [];
+
+events = events.filter(
+event => event.name !== eventName
+);
+
+localStorage.setItem(
+"allEvents",
+JSON.stringify(events)
+);
+
+alert("Event Deleted!");
+
+location.reload();
+
+}
+
+</script>
+
+</body>
+</html>
+```

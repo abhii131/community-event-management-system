@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="card">
+
+<h1>User Registration</h1>
+
+<input type="text"
+id="name"
+placeholder="Full Name">
+
+<br><br>
+
+<input type="email"
+id="email"
+placeholder="Email">
+
+<br><br>
+
+<input type="password"
+id="password"
+placeholder="Password">
+
+<br><br>
+
+<button onclick="registerUser()">
+Register
+</button>
+
+</div>
+
+<script>
+
+function registerUser(){
+
+let user = {
+name: document.getElementById("name").value,
+email: document.getElementById("email").value,
+password: document.getElementById("password").value
+};
+
+localStorage.setItem(
+"user",
+JSON.stringify(user)
+);
+
+alert("Registration Successful!");
+
+window.location.href="login.html";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="card">
+
+<h1>Login</h1>
+
+<input type="email"
+id="email"
+placeholder="Email">
+
+<br><br>
+
+<input type="password"
+id="password"
+placeholder="Password">
+
+<br><br>
+
+<button onclick="login()">
+Login
+</button>
+
+</div>
+
+<script>
+
+function login(){
+
+let email =
+document.getElementById("email").value;
+
+let savedUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(savedUser && savedUser.email === email){
+
+alert("Login Successful");
+
+window.location.href="index.html";
+
+}else{
+
+alert("User not found. Please register first.");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

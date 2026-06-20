@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+<h1>Dashboard</h1>
+<a href="index.html">Home</a>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Total Events</h2>
+<h1 id="totalEvents">0</h1>
+</div>
+
+<div class="card">
+<h2>Registered Events</h2>
+<h1 id="registeredEvents">0</h1>
+</div>
+
+</div>
+
+<script>
+
+let allEvents =
+JSON.parse(localStorage.getItem("allEvents")) || [];
+
+let registeredEvents =
+JSON.parse(localStorage.getItem("events")) || [];
+
+document.getElementById("totalEvents").innerText =
+allEvents.length + 2;
+
+document.getElementById("registeredEvents").innerText =
+registeredEvents.length;
+
+</script>
+
+</body>
+</html>

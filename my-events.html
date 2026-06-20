@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Events</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<h1>Registered Events</h1>
+
+<ul id="eventList"></ul>
+
+<script>
+
+let events =
+JSON.parse(localStorage.getItem("events")) || [];
+
+let list =
+document.getElementById("eventList");
+
+events.forEach(event=>{
+
+let li=document.createElement("li");
+
+li.innerText=event;
+
+list.appendChild(li);
+
+});
+
+</script>
+
+</body>
+</html>
