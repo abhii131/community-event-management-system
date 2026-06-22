@@ -1,38 +1,43 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <header>
-    <h1>Admin Dashboard</h1>
-    <a href="index.html">Home</a>
+<h1>Admin Analytics Dashboard</h1>
+
+<a href="index.html">Home</a>
+<a href="profile.html">Profile</a>
+<a href="my-events.html">My Events</a>
+
 </header>
 
 <div class="container">
 
-    <div class="card">
-        <h2>Total Events</h2>
-        <h1 id="totalEvents">0</h1>
-    </div>
+<div class="card">
+<h2>Total Events</h2>
+<h1 id="totalEvents">0</h1>
+</div>
 
-    <div class="card">
-        <h2>Total Registrations</h2>
-        <h1 id="totalRegistrations">0</h1>
-    </div>
+<div class="card">
+<h2>Total Registrations</h2>
+<h1 id="totalRegistrations">0</h1>
+</div>
 
-    <div class="card">
-        <h2>Latest Event</h2>
-        <p id="latestEvent">No Event</p>
-    </div>
+<div class="card">
+<h2>Latest Event</h2>
+<p id="latestEvent">None</p>
+</div>
 
-    <div class="card">
-        <h2>Latest Registration</h2>
-        <p id="latestRegistration">No Registration</p>
-    </div>
+<div class="card">
+<h2>Latest Registration</h2>
+<p id="latestRegistration">None</p>
+</div>
 
 </div>
 
@@ -51,16 +56,21 @@ document.getElementById("totalRegistrations").innerText =
 registrations.length;
 
 if(events.length > 0){
+
 document.getElementById("latestEvent").innerText =
 events[events.length - 1].name;
+
 }
 
 if(registrations.length > 0){
+
 document.getElementById("latestRegistration").innerText =
 registrations[registrations.length - 1];
+
 }
 
 </script>
 
 </body>
 </html>
+```

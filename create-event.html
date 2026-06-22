@@ -23,6 +23,18 @@
     placeholder="Location" required>
 
     <br><br>
+    <input type="text"
+id="eventCategory"
+placeholder="Category">
+
+<br><br>
+
+<textarea
+id="eventDescription"
+placeholder="Event Description">
+</textarea>
+
+<br><br>
 
     <button type="submit">
         Create Event
@@ -50,10 +62,18 @@ let events =
 JSON.parse(localStorage.getItem("allEvents"))
 || [];
 
+let eventCategory =
+document.getElementById("eventCategory").value;
+
+let eventDescription =
+document.getElementById("eventDescription").value;
+
 events.push({
 name:eventName,
 date:eventDate,
-location:eventLocation
+location:eventLocation,
+category:eventCategory,
+description:eventDescription
 });
 
 localStorage.setItem(

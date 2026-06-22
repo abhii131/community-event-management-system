@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,29 +8,79 @@
 
 <body>
 
-<h1>Registered Events</h1>
+<header>
+<h1>My Registered Events</h1>
 
-<ul id="eventList"></ul>
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="profile.html">Profile</a>
+
+</header>
+
+<div class="container">
+
+<div id="eventContainer"></div>
+
+</div>
 
 <script>
 
 let events =
-JSON.parse(localStorage.getItem("events")) || [];
+JSON.parse(localStorage.getItem("registeredEvents"))
+|| [];
 
-let list =
-document.getElementById("eventList");
+let container =
+document.getElementById("eventContainer");
 
-events.forEach(event=>{
+if(events.length === 0){
 
-let li=document.createElement("li");
+container.innerHTML = `
+<div class="card">
+<h2>No Events Registered Yet</h2>
+</div>
+`;
 
-li.innerText=event;
+}
 
-list.appendChild(li);
+events.forEach((event,index)=>{
+
+container.innerHTML += `
+
+<div class="card">
+
+<h2>${event}</h2>
+
+<button onclick="removeEvent(${index})">
+Remove Registration
+</button>
+
+</div>
+
+`;
 
 });
+
+function removeEvent(index){
+
+let events =
+JSON.parse(localStorage.getItem("registeredEvents"))
+|| [];
+
+events.splice(index,1);
+
+localStorage.setItem(
+"registeredEvents",
+JSON.stringify(events)
+);
+
+alert("Registration Removed!");
+
+location.reload();
+
+}
 
 </script>
 
 </body>
 </html>
+```

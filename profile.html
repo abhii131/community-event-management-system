@@ -18,6 +18,7 @@
 <div class="card" style="text-align:center;">
 
 <img
+id="profileImage"
 src="https://ui-avatars.com/api/?name=User&size=150"
 alt="Profile Photo"
 width="150"
@@ -71,6 +72,47 @@ user.email;
 
 document.getElementById("registrations").innerText =
 registrations.length;
+
+/* Profile Photo Upload */
+
+document.getElementById("profilePic")
+.addEventListener("change", function(){
+
+let file = this.files[0];
+
+if(file){
+
+let reader = new FileReader();
+
+reader.onload = function(e){
+
+document.getElementById("profileImage").src =
+e.target.result;
+
+localStorage.setItem(
+"profileImage",
+e.target.result
+);
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+});
+
+/* Load Saved Photo */
+
+let savedImage =
+localStorage.getItem("profileImage");
+
+if(savedImage){
+
+document.getElementById("profileImage").src =
+savedImage;
+
+}
 
 </script>
 
