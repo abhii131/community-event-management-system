@@ -1,0 +1,79 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <h1>User Profile</h1>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+</header>
+
+<div class="container">
+
+<div class="card" style="text-align:center;">
+
+<img
+src="https://ui-avatars.com/api/?name=User&size=150"
+alt="Profile Photo"
+width="150"
+style="border-radius:50%;">
+
+<br><br>
+
+<input type="file" id="profilePic">
+
+<br><br>
+
+<h2>Welcome</h2>
+
+<p>
+<strong>Name:</strong>
+<span id="name"></span>
+</p>
+
+<p>
+<strong>Email:</strong>
+<span id="email"></span>
+</p>
+
+<p>
+<strong>Total Registrations:</strong>
+<span id="registrations"></span>
+</p>
+
+</div>
+
+</div>
+
+<script>
+
+let user =
+JSON.parse(localStorage.getItem("user"));
+
+let registrations =
+JSON.parse(localStorage.getItem("registeredEvents"))
+|| [];
+
+if(user){
+
+document.getElementById("name").innerText =
+user.name;
+
+document.getElementById("email").innerText =
+user.email;
+
+}
+
+document.getElementById("registrations").innerText =
+registrations.length;
+
+</script>
+
+</body>
+</html>
+```

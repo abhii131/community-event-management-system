@@ -1,43 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dashboard</title>
-<link rel="stylesheet" href="css/style.css">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <header>
-<h1>Dashboard</h1>
-<a href="index.html">Home</a>
+    <h1>Admin Dashboard</h1>
+    <a href="index.html">Home</a>
 </header>
 
 <div class="container">
 
-<div class="card">
-<h2>Total Events</h2>
-<h1 id="totalEvents">0</h1>
-</div>
+    <div class="card">
+        <h2>Total Events</h2>
+        <h1 id="totalEvents">0</h1>
+    </div>
 
-<div class="card">
-<h2>Registered Events</h2>
-<h1 id="registeredEvents">0</h1>
-</div>
+    <div class="card">
+        <h2>Total Registrations</h2>
+        <h1 id="totalRegistrations">0</h1>
+    </div>
+
+    <div class="card">
+        <h2>Latest Event</h2>
+        <p id="latestEvent">No Event</p>
+    </div>
+
+    <div class="card">
+        <h2>Latest Registration</h2>
+        <p id="latestRegistration">No Registration</p>
+    </div>
 
 </div>
 
 <script>
 
-let allEvents =
+let events =
 JSON.parse(localStorage.getItem("allEvents")) || [];
 
-let registeredEvents =
-JSON.parse(localStorage.getItem("events")) || [];
+let registrations =
+JSON.parse(localStorage.getItem("registeredEvents")) || [];
 
 document.getElementById("totalEvents").innerText =
-allEvents.length + 2;
+events.length + 2;
 
-document.getElementById("registeredEvents").innerText =
-registeredEvents.length;
+document.getElementById("totalRegistrations").innerText =
+registrations.length;
+
+if(events.length > 0){
+document.getElementById("latestEvent").innerText =
+events[events.length - 1].name;
+}
+
+if(registrations.length > 0){
+document.getElementById("latestRegistration").innerText =
+registrations[registrations.length - 1];
+}
 
 </script>
 

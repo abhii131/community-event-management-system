@@ -1,14 +1,16 @@
 function registerEvent(eventName){
 
-let events =
-JSON.parse(localStorage.getItem("events")) || [];
+let registeredEvents =
+JSON.parse(localStorage.getItem("registeredEvents"))
+|| [];
 
-events.push(eventName);
+registeredEvents.push(eventName);
 
 localStorage.setItem(
-"events",
-JSON.stringify(events)
+"registeredEvents",
+JSON.stringify(registeredEvents)
 );
 
-alert("Registered Successfully!");
+alert("Successfully Registered!");
+
 }
