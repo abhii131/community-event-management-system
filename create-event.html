@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,24 +7,38 @@
 </head>
 <body>
 
+<header>
 <h1>Create Event</h1>
+<a href="index.html">Home</a>
+</header>
+
+<div class="container">
+
+<div class="card">
 
 <form id="eventForm">
 
-    <input type="text" id="eventName"
-    placeholder="Event Name" required>
+<input type="text"
+id="eventName"
+placeholder="Event Name"
+required>
 
-    <br><br>
+<br><br>
 
-    <input type="date" id="eventDate" required>
+<input type="date"
+id="eventDate"
+required>
 
-    <br><br>
+<br><br>
 
-    <input type="text" id="eventLocation"
-    placeholder="Location" required>
+<input type="text"
+id="eventLocation"
+placeholder="Location"
+required>
 
-    <br><br>
-    <input type="text"
+<br><br>
+
+<input type="text"
 id="eventCategory"
 placeholder="Category">
 
@@ -36,11 +51,21 @@ placeholder="Event Description">
 
 <br><br>
 
-    <button type="submit">
-        Create Event
-    </button>
+<input
+type="file"
+id="eventImage">
+
+<br><br>
+
+<button type="submit">
+Create Event
+</button>
 
 </form>
+
+</div>
+
+</div>
 
 <script>
 
@@ -58,22 +83,32 @@ document.getElementById("eventDate").value;
 let eventLocation =
 document.getElementById("eventLocation").value;
 
-let events =
-JSON.parse(localStorage.getItem("allEvents"))
-|| [];
-
 let eventCategory =
 document.getElementById("eventCategory").value;
 
 let eventDescription =
 document.getElementById("eventDescription").value;
 
+let eventImage =
+document.getElementById("eventImage").files[0];
+
+let events =
+JSON.parse(localStorage.getItem("allEvents"))
+|| [];
+
+if(eventImage){
+
+let reader = new FileReader();
+
+reader.onload = function(){
+
 events.push({
 name:eventName,
 date:eventDate,
 location:eventLocation,
 category:eventCategory,
-description:eventDescription
+description:eventDescription,
+image:reader.result
 });
 
 localStorage.setItem(
@@ -83,9 +118,41 @@ JSON.stringify(events)
 
 alert("Event Created!");
 
+window.location.href =
+"index.html";
+
+};
+
+reader.readAsDataURL(eventImage);
+
+}
+else{
+
+events.push({
+name:eventName,
+date:eventDate,
+location:eventLocation,
+category:eventCategory,
+description:eventDescription,
+image:""
+});
+
+localStorage.setItem(
+"allEvents",
+JSON.stringify(events)
+);
+
+alert("Event Created!");
+
+window.location.href =
+"index.html";
+
+}
+
 });
 
 </script>
 
 </body>
 </html>
+```
