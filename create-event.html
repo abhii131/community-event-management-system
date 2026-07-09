@@ -1,153 +1,173 @@
-```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Event</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <header>
-<h1>Create Event</h1>
-<a href="index.html">Home</a>
+    <h1>Create Event</h1>
+    <a href="index.html">Home</a>
 </header>
 
 <div class="container">
 
-<div class="card">
+    <div class="card">
 
-<form id="eventForm">
+        <form id="eventForm">
 
-<input type="text"
-id="eventName"
-placeholder="Event Name"
-required>
+            <input
+                type="text"
+                id="eventName"
+                placeholder="Event Name"
+                required>
 
-<br><br>
+            <br><br>
 
-<input type="date"
-id="eventDate"
-required>
+            <input
+                type="date"
+                id="eventDate"
+                required>
 
-<br><br>
+            <br><br>
 
-<input type="text"
-id="eventLocation"
-placeholder="Location"
-required>
+            <input
+                type="text"
+                id="eventLocation"
+                placeholder="Location"
+                required>
 
-<br><br>
+            <br><br>
 
-<input type="text"
-id="eventCategory"
-placeholder="Category">
+            <input
+                type="text"
+                id="eventCategory"
+                placeholder="Category">
 
-<br><br>
+            <br><br>
 
-<textarea
-id="eventDescription"
-placeholder="Event Description">
-</textarea>
+            <textarea
+                id="eventDescription"
+                placeholder="Event Description"></textarea>
 
-<br><br>
+            <br><br>
 
-<input
-type="file"
-id="eventImage">
+            <input
+                type="file"
+                id="eventImage"
+                accept="image/*">
 
-<br><br>
+            <br><br>
 
-<button type="submit">
-Create Event
-</button>
+            <button type="submit">
+                Save Event
+            </button>
 
-</form>
+        </form>
 
-</div>
+    </div>
 
 </div>
 
 <script>
 
-document.getElementById("eventForm")
-.addEventListener("submit", function(e){
+const form = document.getElementById("eventForm");
 
-e.preventDefault();
+let editIndex = localStorage.getItem("editIndex");
+let events = JSON.parse(localStorage.getItem("events")) || [];
 
-let eventName =
-document.getElementById("eventName").value;
+/* Load event if editing */
 
-let eventDate =
-document.getElementById("eventDate").value;
+if (editIndex !== null) {
 
-let eventLocation =
-document.getElementById("eventLocation").value;
+    let event = events[editIndex];
 
-let eventCategory =
-document.getElementById("eventCategory").value;
+    if (event) {
 
-let eventDescription =
-document.getElementById("eventDescription").value;
+        document.getElementById("eventName").value = event.name;
+        document.getElementById("eventDate").value = event.date;
+        document.getElementById("eventLocation").value = event.location;
+        document.getElementById("eventCategory").value = event.category;
+        document.getElementById("eventDescription").value = event.description;
 
-let eventImage =
-document.getElementById("eventImage").files[0];
-
-let events =
-JSON.parse(localStorage.getItem("allEvents"))
-|| [];
-
-if(eventImage){
-
-let reader = new FileReader();
-
-reader.onload = function(){
-
-events.push({
-name:eventName,
-date:eventDate,
-location:eventLocation,
-category:eventCategory,
-description:eventDescription,
-image:reader.result
-});
-
-localStorage.setItem(
-"allEvents",
-JSON.stringify(events)
-);
-
-alert("Event Created!");
-
-window.location.href =
-"index.html";
-
-};
-
-reader.readAsDataURL(eventImage);
-
+    }
 }
-else{
 
-events.push({
-name:eventName,
-date:eventDate,
-location:eventLocation,
-category:eventCategory,
-description:eventDescription,
-image:""
-});
+form.addEventListener("submit", function (e) {
 
-localStorage.setItem(
-"allEvents",
-JSON.stringify(events)
-);
+    e.preventDefault();
 
-alert("Event Created!");
+    let eventName = document.getElementById("eventName").value;
+    let eventDate = document.getElementById("eventDate").value;
+    let eventLocation = document.getElementById("eventLocation").value;
+    let eventCategory = document.getElementById("eventCategory").value;
+    let eventDescription = document.getElementById("eventDescription").value;
 
-window.location.href =
-"index.html";
+    let imageFile = document.getElementById("eventImage").files[0];
 
-}
+    if (imageFile) {
+
+        const reader = new FileReader();
+
+        reader.onload = function () {
+
+            saveEvent(reader.result);
+
+        };
+
+        reader.readAsDataURL(imageFile);
+
+    } else {
+
+        let oldImage = "";
+
+        if (editIndex !== null && events[editIndex]) {
+
+            oldImage = events[editIndex].image;
+
+        }
+
+        saveEvent(oldImage);
+
+    }
+
+    function saveEvent(imageData) {
+
+        let newEvent = {
+
+            name: eventName,
+            date: eventDate,
+            location: eventLocation,
+            category: eventCategory,
+            description: eventDescription,
+            image: imageData
+
+        };
+
+        if (editIndex !== null) {
+
+            events[editIndex] = newEvent;
+
+            localStorage.removeItem("editIndex");
+
+        } else {
+
+            events.push(newEvent);
+
+        }
+
+        localStorage.setItem("events", JSON.stringify(events));
+
+        alert("Event Saved Successfully!");
+
+        window.location.href = "index.html";
+
+    }
 
 });
 
@@ -155,4 +175,3 @@ window.location.href =
 
 </body>
 </html>
-```

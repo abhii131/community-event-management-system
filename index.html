@@ -1,14 +1,18 @@
-```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Event Management System</title>
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <header>
+
     <h1>Community Event Management System</h1>
 
     <nav>
@@ -23,165 +27,163 @@
             🌙 Dark Mode
         </button>
     </nav>
+
 </header>
 
 <div class="search-container">
 
-<input
-type="text"
-id="searchBox"
-placeholder="🔍 Search Events..."
-onkeyup="searchEvents()">
+    <input
+        type="text"
+        id="searchBox"
+        placeholder="🔍 Search Events..."
+        onkeyup="searchEvents()">
 
 </div>
 
 <div class="container">
 
-
-<div id="dynamicEvents"></div>
+    <div id="dynamicEvents"></div>
 
 </div>
 
 <footer>
-<p>© 2026 Community Event Management System</p>
+
+    <p>© 2026 Community Event Management System</p>
+
 </footer>
 
 <script src="js/app.js"></script>
 
 <script>
 
-let events =
-JSON.parse(localStorage.getItem("allEvents"))
-|| [];
+const container = document.getElementById("dynamicEvents");
 
-let container =
-document.getElementById("dynamicEvents");
+function loadEvents() {
 
-events.forEach(event => {
+    let events = JSON.parse(localStorage.getItem("events")) || [];
 
-container.innerHTML += `
+    container.innerHTML = "";
 
-<div class="card">
+    if(events.length === 0){
 
-<img
-src="${event.image || 'https://picsum.photos/400/200'}"
-alt="Event Image">
+        container.innerHTML = `
+            <h2 style="text-align:center">
+                No Events Available
+            </h2>
+        `;
 
-<h2>${event.name}</h2>
+        return;
+    }
 
-<p>Date: ${event.date}</p>
+    events.forEach((event,index)=>{
 
-<p>Location: ${event.location}</p>
+        container.innerHTML += `
 
-<p>Category: ${event.category}</p>
+        <div class="card">
 
-<p>Description: ${event.description}</p>
+            <img
+            src="${event.image || 'https://picsum.photos/400/200'}"
+            alt="Event Image">
 
-<button onclick="registerEvent('${event.name}')">
-Register
-</button>
+            <h2>${event.name}</h2>
 
-<button onclick="editEvent('${event.name}')">
-Edit
-</button>
+            <p><b>Date:</b> ${event.date}</p>
 
-<button onclick="deleteEvent('${event.name}')">
-Delete
-</button>
+            <p><b>Location:</b> ${event.location}</p>
 
-</div>
+            <p><b>Category:</b> ${event.category}</p>
 
-`;
+            <p><b>Description:</b> ${event.description}</p>
 
-});
+            <button onclick="registerEvent('${event.name}')">
+                Register
+            </button>
+
+            <button onclick="editEvent(${index})">
+                Edit
+            </button>
+
+            <button onclick="deleteEvent(${index})">
+                Delete
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+function deleteEvent(index){
+
+    let events = JSON.parse(localStorage.getItem("events")) || [];
+
+    if(confirm("Delete this event?")){
+
+        events.splice(index,1);
+
+        localStorage.setItem("events",JSON.stringify(events));
+
+        loadEvents();
+
+    }
+
+}
+
+function editEvent(index){
+
+    localStorage.setItem("editIndex",index);
+
+    window.location.href="create-event.html";
+
+}
 
 function searchEvents(){
 
-let input =
-document.getElementById("searchBox")
-.value.toLowerCase();
+    let input = document
+        .getElementById("searchBox")
+        .value
+        .toLowerCase();
 
-let cards =
-document.getElementsByClassName("card");
+    let cards = document.getElementsByClassName("card");
 
-for(let i=0;i<cards.length;i++){
+    for(let i=0;i<cards.length;i++){
 
-let text =
-cards[i].innerText.toLowerCase();
+        let text = cards[i].innerText.toLowerCase();
 
-if(text.includes(input)){
-cards[i].style.display = "block";
-}
-else{
-cards[i].style.display = "none";
-}
+        cards[i].style.display =
+            text.includes(input)
+            ? "block"
+            : "none";
 
-}
+    }
 
 }
 
 function toggleDarkMode(){
 
-document.body.classList.toggle("dark-mode");
+    document.body.classList.toggle("dark-mode");
+
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark-mode")
+        ? "dark"
+        : "light"
+    );
 
 }
 
-function editEvent(eventName){
+if(localStorage.getItem("theme") === "dark"){
 
-let newName =
-prompt("Enter New Event Name");
-
-if(!newName) return;
-
-let events =
-JSON.parse(localStorage.getItem("allEvents"))
-|| [];
-
-events.forEach(event => {
-
-if(event.name === eventName){
-
-event.name = newName;
+    document.body.classList.add("dark-mode");
 
 }
 
-});
-
-localStorage.setItem(
-"allEvents",
-JSON.stringify(events)
-);
-
-alert("Event Updated!");
-
-location.reload();
-
-}
-
-function deleteEvent(eventName){
-
-let events =
-JSON.parse(localStorage.getItem("allEvents"))
-|| [];
-
-events =
-events.filter(event =>
-event.name !== eventName
-);
-
-localStorage.setItem(
-"allEvents",
-JSON.stringify(events)
-);
-
-alert("Event Deleted!");
-
-location.reload();
-
-}
+loadEvents();
 
 </script>
 
 </body>
+
 </html>
-```

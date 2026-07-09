@@ -1,76 +1,82 @@
-```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Admin Dashboard</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
 <header>
-<h1>Admin Analytics Dashboard</h1>
 
-<a href="index.html">Home</a>
-<a href="profile.html">Profile</a>
-<a href="my-events.html">My Events</a>
+    <h1>Admin Analytics Dashboard</h1>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="profile.html">Profile</a>
+        <a href="my-events.html">My Events</a>
+    </nav>
 
 </header>
 
 <div class="container">
 
-<div class="card">
-<h2>Total Events</h2>
-<h1 id="totalEvents">0</h1>
-</div>
+    <div class="card">
+        <h2>Total Events</h2>
+        <h1 id="totalEvents">0</h1>
+    </div>
 
-<div class="card">
-<h2>Total Registrations</h2>
-<h1 id="totalRegistrations">0</h1>
-</div>
+    <div class="card">
+        <h2>Total Registrations</h2>
+        <h1 id="totalRegistrations">0</h1>
+    </div>
 
-<div class="card">
-<h2>Latest Event</h2>
-<p id="latestEvent">None</p>
-</div>
+    <div class="card">
+        <h2>Latest Event</h2>
+        <p id="latestEvent">None</p>
+    </div>
 
-<div class="card">
-<h2>Latest Registration</h2>
-<p id="latestRegistration">None</p>
-</div>
+    <div class="card">
+        <h2>Latest Registration</h2>
+        <p id="latestRegistration">None</p>
+    </div>
 
 </div>
 
 <script>
 
 let events =
-JSON.parse(localStorage.getItem("allEvents")) || [];
+JSON.parse(localStorage.getItem("events")) || [];
 
 let registrations =
 JSON.parse(localStorage.getItem("registeredEvents")) || [];
 
 document.getElementById("totalEvents").innerText =
-events.length + 2;
+events.length;
 
 document.getElementById("totalRegistrations").innerText =
 registrations.length;
 
 if(events.length > 0){
 
-document.getElementById("latestEvent").innerText =
-events[events.length - 1].name;
+    document.getElementById("latestEvent").innerText =
+    events[events.length - 1].name;
 
 }
 
 if(registrations.length > 0){
 
-document.getElementById("latestRegistration").innerText =
-registrations[registrations.length - 1];
+    document.getElementById("latestRegistration").innerText =
+    registrations[registrations.length - 1];
 
 }
 
 </script>
 
 </body>
+
 </html>
-```

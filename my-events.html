@@ -1,86 +1,226 @@
-```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>My Events</title>
-<link rel="stylesheet" href="css/style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Events</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </head>
 
 <body>
 
 <header>
-<h1>My Registered Events</h1>
 
-<a href="index.html">Home</a>
-<a href="dashboard.html">Dashboard</a>
-<a href="profile.html">Profile</a>
+    <h1>My Registered Events</h1>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="profile.html">Profile</a>
+    </nav>
 
 </header>
 
 <div class="container">
 
-<div id="eventContainer"></div>
+    <div id="eventContainer"></div>
 
 </div>
 
 <script>
 
 let events =
-JSON.parse(localStorage.getItem("registeredEvents"))
-|| [];
+JSON.parse(localStorage.getItem("registeredEvents")) || [];
+
+let user =
+JSON.parse(localStorage.getItem("user")) || {
+    name:"User"
+};
 
 let container =
 document.getElementById("eventContainer");
 
-if(events.length === 0){
+if(events.length===0){
 
-container.innerHTML = `
-<div class="card">
-<h2>No Events Registered Yet</h2>
-</div>
-`;
+    container.innerHTML=`
+
+    <div class="card">
+
+        <h2>No Events Registered Yet</h2>
+
+    </div>
+
+    `;
+
+}else{
+
+    events.forEach((event,index)=>{
+
+        container.innerHTML += `
+
+        <div class="card">
+
+            <h2>${event}</h2>
+
+            <button onclick="downloadCertificate('${event}')">
+                Download Certificate
+            </button>
+
+            <br><br>
+
+            <button onclick="removeEvent(${index})">
+                Remove Registration
+            </button>
+
+        </div>
+
+        `;
+
+    });
 
 }
 
-events.forEach((event,index)=>{
-
-container.innerHTML += `
-
-<div class="card">
-
-<h2>${event}</h2>
-
-<button onclick="removeEvent(${index})">
-Remove Registration
-</button>
-
-</div>
-
-`;
-
-});
-
 function removeEvent(index){
 
-let events =
-JSON.parse(localStorage.getItem("registeredEvents"))
-|| [];
+    let events =
+    JSON.parse(localStorage.getItem("registeredEvents")) || [];
 
-events.splice(index,1);
+    events.splice(index,1);
 
-localStorage.setItem(
-"registeredEvents",
-JSON.stringify(events)
-);
+    localStorage.setItem(
+        "registeredEvents",
+        JSON.stringify(events)
+    );
 
-alert("Registration Removed!");
+    alert("Registration Removed!");
 
-location.reload();
+    location.reload();
+
+}
+
+function downloadCertificate(eventName){
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF("landscape");
+
+    doc.setDrawColor(0,51,153);
+    doc.setLineWidth(2);
+    doc.rect(10,10,277,190);
+
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(26);
+    doc.setTextColor(0,51,153);
+
+    doc.text(
+        "COMMUNITY EVENT MANAGEMENT SYSTEM",
+        148,
+        30,
+        {align:"center"}
+    );
+
+    doc.setFontSize(22);
+    doc.setTextColor(0,0,0);
+
+    doc.text(
+        "CERTIFICATE OF PARTICIPATION",
+        148,
+        50,
+        {align:"center"}
+    );
+
+    doc.setFont("times","italic");
+    doc.setFontSize(16);
+
+    doc.text(
+        "This certificate is proudly presented to",
+        148,
+        72,
+        {align:"center"}
+    );
+
+    doc.setFont("times","bold");
+    doc.setFontSize(28);
+    doc.setTextColor(153,0,0);
+
+    doc.text(
+        user.name,
+        148,
+        92,
+        {align:"center"}
+    );
+
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(16);
+    doc.setTextColor(0,0,0);
+
+    doc.text(
+        "for successfully participating in",
+        148,
+        110,
+        {align:"center"}
+    );
+
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(22);
+    doc.setTextColor(0,102,0);
+
+    doc.text(
+        eventName,
+        148,
+        126,
+        {align:"center"}
+    );
+
+    let today = new Date().toLocaleDateString();
+
+    doc.setFontSize(14);
+    doc.setTextColor(0,0,0);
+
+    doc.text(
+        "Date: " + today,
+        30,
+        160
+    );
+
+    doc.line(30,172,90,172);
+    doc.text(
+        "Event Coordinator",
+        30,
+        180
+    );
+
+    doc.line(190,172,250,172);
+    doc.text(
+        "Project Administrator",
+        190,
+        180
+    );
+
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+
+    doc.text(
+        "Community Event Management System © 2026",
+        148,
+        195,
+        {align:"center"}
+    );
+
+    doc.save(eventName + "_Certificate.pdf");
 
 }
 
 </script>
 
 </body>
+
 </html>
-```

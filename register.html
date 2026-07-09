@@ -1,36 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Register</title>
-<link rel="stylesheet" href="css/style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
+
 <body>
 
-<div class="card">
+<div class="container">
 
-<h1>User Registration</h1>
+    <div class="card">
 
-<input type="text"
-id="name"
-placeholder="Full Name">
+        <h1>User Registration</h1>
 
-<br><br>
+        <input
+            type="text"
+            id="name"
+            placeholder="Full Name"
+            required>
 
-<input type="email"
-id="email"
-placeholder="Email">
+        <br><br>
 
-<br><br>
+        <input
+            type="email"
+            id="email"
+            placeholder="Email"
+            required>
 
-<input type="password"
-id="password"
-placeholder="Password">
+        <br><br>
 
-<br><br>
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required>
 
-<button onclick="registerUser()">
-Register
-</button>
+        <br><br>
+
+        <button onclick="registerUser()">
+            Register
+        </button>
+
+        <br><br>
+
+        <p>
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+
+    </div>
 
 </div>
 
@@ -38,24 +63,55 @@ Register
 
 function registerUser(){
 
-let user = {
-name: document.getElementById("name").value,
-email: document.getElementById("email").value,
-password: document.getElementById("password").value
-};
+    let name =
+    document.getElementById("name").value.trim();
 
-localStorage.setItem(
-"user",
-JSON.stringify(user)
-);
+    let email =
+    document.getElementById("email").value.trim();
 
-alert("Registration Successful!");
+    let password =
+    document.getElementById("password").value;
 
-window.location.href="login.html";
+    if(name==="" || email==="" || password===""){
+
+        alert("Please fill all fields.");
+
+        return;
+
+    }
+
+    let savedUser =
+    JSON.parse(localStorage.getItem("user"));
+
+    if(savedUser && savedUser.email===email){
+
+        alert("Email is already registered.");
+
+        return;
+
+    }
+
+    let user = {
+
+        name:name,
+        email:email,
+        password:password
+
+    };
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify(user)
+    );
+
+    alert("Registration Successful!");
+
+    window.location.href="login.html";
 
 }
 
 </script>
 
 </body>
+
 </html>
