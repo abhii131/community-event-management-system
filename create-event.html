@@ -2,176 +2,234 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Event</title>
-    <link rel="stylesheet" href="css/style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Create Event</title>
+
+<link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
 <header>
-    <h1>Create Event</h1>
-    <a href="index.html">Home</a>
+
+<h1>Create Event</h1>
+
+<nav>
+
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="my-events.html">My Events</a>
+
+</nav>
+
 </header>
 
 <div class="container">
 
-    <div class="card">
+<div class="card">
 
-        <form id="eventForm">
+<form id="eventForm">
 
-            <input
-                type="text"
-                id="eventName"
-                placeholder="Event Name"
-                required>
+<input
+type="text"
+id="eventName"
+placeholder="Event Name"
+required>
 
-            <br><br>
+<br><br>
 
-            <input
-                type="date"
-                id="eventDate"
-                required>
+<input
+type="date"
+id="eventDate"
+required>
 
-            <br><br>
+<br><br>
 
-            <input
-                type="text"
-                id="eventLocation"
-                placeholder="Location"
-                required>
+<input
+type="text"
+id="eventLocation"
+placeholder="Location"
+required>
 
-            <br><br>
+<br><br>
 
-            <input
-                type="text"
-                id="eventCategory"
-                placeholder="Category">
+<select id="eventCategory" required>
 
-            <br><br>
+<option value="">Select Category</option>
+<option>Workshop</option>
+<option>Seminar</option>
+<option>Sports</option>
+<option>Cultural</option>
+<option>Technical</option>
+<option>Hackathon</option>
 
-            <textarea
-                id="eventDescription"
-                placeholder="Event Description"></textarea>
+</select>
 
-            <br><br>
+<br><br>
 
-            <input
-                type="file"
-                id="eventImage"
-                accept="image/*">
+<textarea
+id="eventDescription"
+placeholder="Event Description"></textarea>
 
-            <br><br>
+<br><br>
 
-            <button type="submit">
-                Save Event
-            </button>
+<input
+type="number"
+id="eventCapacity"
+placeholder="Maximum Participants"
+min="1"
+required>
 
-        </form>
+<br><br>
 
-    </div>
+<input
+type="text"
+id="organizer"
+readonly>
+
+<br><br>
+
+<input
+type="file"
+id="eventImage"
+accept="image/*">
+
+<br><br>
+
+<button type="submit">
+
+Save Event
+
+</button>
+
+</form>
+
+</div>
 
 </div>
 
 <script>
 
-const form = document.getElementById("eventForm");
+if(localStorage.getItem("loggedIn")!=="true"){
+
+alert("Please login first.");
+
+window.location.href="login.html";
+
+}
+
+let user=
+JSON.parse(localStorage.getItem("user"))||{};
+
+document.getElementById("organizer").value=
+user.name || "";
+
+document.getElementById("eventDate").min=
+new Date().toISOString().split("T")[0];
+
+let events=
+JSON.parse(localStorage.getItem("events")) || [];
 
 let editIndex = localStorage.getItem("editIndex");
-let events = JSON.parse(localStorage.getItem("events")) || [];
 
-/* Load event if editing */
-
-if (editIndex !== null) {
+if (editIndex !== null && events[editIndex]) {
 
     let event = events[editIndex];
 
-    if (event) {
+    document.getElementById("eventName").value = event.name;
+    document.getElementById("eventDate").value = event.date;
+    document.getElementById("eventLocation").value = event.location;
+    document.getElementById("eventCategory").value = event.category;
+    document.getElementById("eventDescription").value = event.description;
+    document.getElementById("eventCapacity").value = event.capacity;
+    document.getElementById("organizer").value = event.organizer;
 
-        document.getElementById("eventName").value = event.name;
-        document.getElementById("eventDate").value = event.date;
-        document.getElementById("eventLocation").value = event.location;
-        document.getElementById("eventCategory").value = event.category;
-        document.getElementById("eventDescription").value = event.description;
+} else {
 
-    }
+    editIndex = null;
+    localStorage.removeItem("editIndex");
+
 }
 
-form.addEventListener("submit", function (e) {
+document.getElementById("eventForm")
+.addEventListener("submit",function(e){
 
-    e.preventDefault();
+e.preventDefault();
 
-    let eventName = document.getElementById("eventName").value;
-    let eventDate = document.getElementById("eventDate").value;
-    let eventLocation = document.getElementById("eventLocation").value;
-    let eventCategory = document.getElementById("eventCategory").value;
-    let eventDescription = document.getElementById("eventDescription").value;
+let image=document.getElementById("eventImage").files[0];
 
-    let imageFile = document.getElementById("eventImage").files[0];
+if(image){
 
-    if (imageFile) {
+let reader=new FileReader();
 
-        const reader = new FileReader();
+reader.onload=function(){
 
-        reader.onload = function () {
+saveEvent(reader.result);
 
-            saveEvent(reader.result);
+};
 
-        };
+reader.readAsDataURL(image);
 
-        reader.readAsDataURL(imageFile);
+}else{
 
-    } else {
+let oldImage="";
 
-        let oldImage = "";
+if(editIndex!==null){
 
-        if (editIndex !== null && events[editIndex]) {
+oldImage=events[editIndex].image;
 
-            oldImage = events[editIndex].image;
+}
 
-        }
+saveEvent(oldImage);
 
-        saveEvent(oldImage);
-
-    }
-
-    function saveEvent(imageData) {
-
-        let newEvent = {
-
-            name: eventName,
-            date: eventDate,
-            location: eventLocation,
-            category: eventCategory,
-            description: eventDescription,
-            image: imageData
-
-        };
-
-        if (editIndex !== null) {
-
-            events[editIndex] = newEvent;
-
-            localStorage.removeItem("editIndex");
-
-        } else {
-
-            events.push(newEvent);
-
-        }
-
-        localStorage.setItem("events", JSON.stringify(events));
-
-        alert("Event Saved Successfully!");
-
-        window.location.href = "index.html";
-
-    }
+}
 
 });
+
+function saveEvent(image){
+
+let event={
+
+name:document.getElementById("eventName").value,
+date:document.getElementById("eventDate").value,
+location:document.getElementById("eventLocation").value,
+category:document.getElementById("eventCategory").value,
+description:document.getElementById("eventDescription").value,
+capacity:parseInt(document.getElementById("eventCapacity").value),
+registered:editIndex!==null ? events[editIndex].registered : 0,
+organizer:document.getElementById("organizer").value,
+image:image
+
+};
+
+if(editIndex!==null){
+
+events[editIndex]=event;
+localStorage.removeItem("editIndex");
+
+}else{
+
+events.push(event);
+
+}
+
+localStorage.setItem(
+"events",
+JSON.stringify(events)
+);
+
+alert("Event Saved Successfully!");
+
+window.location.href="index.html";
+
+}
 
 </script>
 
 </body>
+
 </html>

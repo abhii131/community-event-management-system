@@ -2,53 +2,141 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Event Management System</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Community Event Management System</title>
+
+<link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
 <header>
 
-    <h1>Community Event Management System</h1>
+<h1>Community Event Management System</h1>
 
-    <nav>
-        <a href="login.html">Login</a>
-        <a href="register.html">Register</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="create-event.html">Create Event</a>
-        <a href="my-events.html">My Events</a>
-        <a href="profile.html">Profile</a>
+<nav>
 
-        <button onclick="toggleDarkMode()">
-            🌙 Dark Mode
-        </button>
-    </nav>
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="create-event.html">Create Event</a>
+<a href="my-events.html">My Events</a>
+<a href="profile.html">Profile</a>
+
+<button onclick="toggleDarkMode()">
+
+🌙 Dark Mode
+
+</button>
+
+</nav>
 
 </header>
 
+<section class="hero">
+
+<h1>Welcome to Community Event Management System</h1>
+
+<p>
+
+Create, Manage and Participate in Community Events Easily
+
+</p>
+
+<a href="create-event.html">
+
+<button>
+
+Create New Event
+
+</button>
+
+</a>
+
+</section>
+
+<div class="stats">
+
+<div class="stat-card">
+
+<h2 id="eventCount">0</h2>
+
+<p>Total Events</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="registrationCount">0</h2>
+
+<p>Registrations</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="upcomingCount">0</h2>
+
+<p>Upcoming</p>
+
+</div>
+
+</div>
+
 <div class="search-container">
 
-    <input
-        type="text"
-        id="searchBox"
-        placeholder="🔍 Search Events..."
-        onkeyup="searchEvents()">
+<input
+type="text"
+id="searchBox"
+placeholder="🔍 Search Events"
+onkeyup="searchEvents()">
+
+<br><br>
+
+<select id="categoryFilter" onchange="filterEvents()">
+
+<option value="All">All Categories</option>
+
+<option value="Workshop">Workshop</option>
+
+<option value="Seminar">Seminar</option>
+
+<option value="Sports">Sports</option>
+
+<option value="Technical">Technical</option>
+
+<option value="Hackathon">Hackathon</option>
+
+<option value="Cultural">Cultural</option>
+
+</select>
 
 </div>
 
 <div class="container">
 
-    <div id="dynamicEvents"></div>
+<div id="dynamicEvents"></div>
 
 </div>
 
 <footer>
 
-    <p>© 2026 Community Event Management System</p>
+<h3>Community Event Management System</h3>
+
+<p>
+
+Built using HTML • CSS • JavaScript • LocalStorage
+
+</p>
+
+<p>
+
+© 2026 All Rights Reserved
+
+</p>
 
 </footer>
 
@@ -56,127 +144,314 @@
 
 <script>
 
-const container = document.getElementById("dynamicEvents");
+if(localStorage.getItem("loggedIn")!=="true"){
 
-function loadEvents() {
+alert("Please login first.");
 
-    let events = JSON.parse(localStorage.getItem("events")) || [];
-
-    container.innerHTML = "";
-
-    if(events.length === 0){
-
-        container.innerHTML = `
-            <h2 style="text-align:center">
-                No Events Available
-            </h2>
-        `;
-
-        return;
-    }
-
-    events.forEach((event,index)=>{
-
-        container.innerHTML += `
-
-        <div class="card">
-
-            <img
-            src="${event.image || 'https://picsum.photos/400/200'}"
-            alt="Event Image">
-
-            <h2>${event.name}</h2>
-
-            <p><b>Date:</b> ${event.date}</p>
-
-            <p><b>Location:</b> ${event.location}</p>
-
-            <p><b>Category:</b> ${event.category}</p>
-
-            <p><b>Description:</b> ${event.description}</p>
-
-            <button onclick="registerEvent('${event.name}')">
-                Register
-            </button>
-
-            <button onclick="editEvent(${index})">
-                Edit
-            </button>
-
-            <button onclick="deleteEvent(${index})">
-                Delete
-            </button>
-
-        </div>
-
-        `;
-
-    });
+window.location.href="login.html";
 
 }
 
-function deleteEvent(index){
+let events=
 
-    let events = JSON.parse(localStorage.getItem("events")) || [];
+JSON.parse(localStorage.getItem("events")) || [];
 
-    if(confirm("Delete this event?")){
+let container=
 
-        events.splice(index,1);
+document.getElementById("dynamicEvents");
 
-        localStorage.setItem("events",JSON.stringify(events));
+let today=new Date();
 
-        loadEvents();
+document.getElementById("eventCount").innerText=
 
-    }
+events.length;
+
+let registrations=
+
+JSON.parse(localStorage.getItem("registeredEvents")) || [];
+
+document.getElementById("registrationCount").innerText=
+
+registrations.length;
+
+let upcoming=
+
+events.filter(event=>new Date(event.date)>=today);
+
+document.getElementById("upcomingCount").innerText=
+
+upcoming.length;
+
+function loadEvents(list=events){
+
+container.innerHTML="";
+
+if(list.length===0){
+
+container.innerHTML="<h2>No Events Found</h2>";
+
+return;
 
 }
 
-function editEvent(index){
+list.forEach((event,index)=>{
 
-    localStorage.setItem("editIndex",index);
+let status=
 
-    window.location.href="create-event.html";
+new Date(event.date)>=today
+
+? "Upcoming"
+
+: "Completed";
+
+let full=
+
+event.registered>=event.capacity;
+
+container.innerHTML+=`
+
+<div class="card">
+
+<img
+src="${event.image || 'https://picsum.photos/500/300'}">
+
+<h2>${event.name}</h2>
+
+<span class="badge">
+
+${event.category}
+
+</span>
+
+<p>
+
+<b>Date:</b>
+
+${event.date}
+
+</p>
+
+<p>
+
+<b>Location:</b>
+
+${event.location}
+
+</p>
+
+<p>
+
+<b>Organizer:</b>
+
+${event.organizer}
+
+</p>
+
+<p>
+
+<b>Status:</b>
+
+${status}
+
+</p>
+
+<p>
+
+<b>Participants:</b>
+
+${event.registered}/${event.capacity}
+
+</p>
+
+<p>
+
+${event.description}
+
+</p>
+<button
+onclick="registerEvent(${index})"
+${full ? "disabled" : ""}>
+
+${full ? "Registration Closed" : "Register"}
+
+</button>
+
+<button
+onclick="editEvent(${index})">
+
+Edit
+
+</button>
+
+<button
+onclick="deleteEvent(${index})">
+
+Delete
+
+</button>
+
+</div>
+
+`;
+
+});
 
 }
 
 function searchEvents(){
 
-    let input = document
-        .getElementById("searchBox")
-        .value
-        .toLowerCase();
+let input=
 
-    let cards = document.getElementsByClassName("card");
+document.getElementById("searchBox")
+.value.toLowerCase();
 
-    for(let i=0;i<cards.length;i++){
+let filtered=
 
-        let text = cards[i].innerText.toLowerCase();
+events.filter(event=>
 
-        cards[i].style.display =
-            text.includes(input)
-            ? "block"
-            : "none";
+event.name.toLowerCase().includes(input) ||
 
-    }
+event.location.toLowerCase().includes(input)
+
+);
+
+filterCategory(filtered);
+
+}
+
+function filterEvents(){
+
+filterCategory(events);
+
+}
+
+function filterCategory(list){
+
+let category=
+
+document.getElementById("categoryFilter").value;
+
+if(category==="All"){
+
+loadEvents(list);
+
+return;
+
+}
+
+let filtered=list.filter(event=>
+
+event.category===category
+
+);
+
+loadEvents(filtered);
+
+}
+
+function registerEvent(index){
+
+let events=
+
+JSON.parse(localStorage.getItem("events")) || [];
+
+let registered=
+
+JSON.parse(localStorage.getItem("registeredEvents")) || [];
+
+let event=events[index];
+
+if(registered.includes(event.name)){
+
+alert("You already registered for this event.");
+
+return;
+
+}
+
+if(event.registered>=event.capacity){
+
+alert("Registration Closed!");
+
+return;
+
+}
+
+registered.push(event.name);
+
+event.registered++;
+
+events[index]=event;
+
+localStorage.setItem(
+
+"registeredEvents",
+
+JSON.stringify(registered)
+
+);
+
+localStorage.setItem(
+
+"events",
+
+JSON.stringify(events)
+
+);
+
+alert("Registration Successful!");
+
+location.reload();
+
+}
+
+function editEvent(index){
+
+localStorage.setItem("editIndex",index);
+
+window.location.href="create-event.html";
+
+}
+
+function deleteEvent(index){
+
+if(confirm("Delete this event?")){
+
+events.splice(index,1);
+
+localStorage.setItem(
+
+"events",
+
+JSON.stringify(events)
+
+);
+
+location.reload();
+
+}
 
 }
 
 function toggleDarkMode(){
 
-    document.body.classList.toggle("dark-mode");
+document.body.classList.toggle("dark-mode");
 
-    localStorage.setItem(
-        "theme",
-        document.body.classList.contains("dark-mode")
-        ? "dark"
-        : "light"
-    );
+if(document.body.classList.contains("dark-mode")){
+
+localStorage.setItem("theme","dark");
+
+}else{
+
+localStorage.setItem("theme","light");
 
 }
 
-if(localStorage.getItem("theme") === "dark"){
+}
 
-    document.body.classList.add("dark-mode");
+if(localStorage.getItem("theme")==="dark"){
+
+document.body.classList.add("dark-mode");
 
 }
 

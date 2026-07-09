@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Register</title>
+    <title>User Registration</title>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -16,46 +16,83 @@
 
 <div class="container">
 
-    <div class="card">
+<div class="card">
 
-        <h1>User Registration</h1>
+<h1>User Registration</h1>
 
-        <input
-            type="text"
-            id="name"
-            placeholder="Full Name"
-            required>
+<input
+type="text"
+id="name"
+placeholder="Full Name"
+required>
 
-        <br><br>
+<br><br>
 
-        <input
-            type="email"
-            id="email"
-            placeholder="Email"
-            required>
+<input
+type="email"
+id="email"
+placeholder="Email"
+required>
 
-        <br><br>
+<br><br>
 
-        <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            required>
+<input
+type="tel"
+id="contact"
+placeholder="Contact Number"
+required>
 
-        <br><br>
+<br><br>
 
-        <button onclick="registerUser()">
-            Register
-        </button>
+<select id="role">
 
-        <br><br>
+<option value="">Select Role</option>
+<option value="Participant">Participant</option>
+<option value="Organizer">Organizer</option>
 
-        <p>
-            Already have an account?
-            <a href="login.html">Login</a>
-        </p>
+</select>
 
-    </div>
+<br><br>
+
+<textarea
+id="bio"
+placeholder="Write a short bio"></textarea>
+
+<br><br>
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+required>
+
+<br><br>
+
+<input
+type="password"
+id="confirmPassword"
+placeholder="Confirm Password"
+required>
+
+<br><br>
+
+<button onclick="registerUser()">
+
+Register
+
+</button>
+
+<br><br>
+
+<p>
+
+Already have an account?
+
+<a href="login.html">Login Here</a>
+
+</p>
+
+</div>
 
 </div>
 
@@ -63,50 +100,63 @@
 
 function registerUser(){
 
-    let name =
-    document.getElementById("name").value.trim();
+let name=document.getElementById("name").value.trim();
+let email=document.getElementById("email").value.trim();
+let contact=document.getElementById("contact").value.trim();
+let role=document.getElementById("role").value;
+let bio=document.getElementById("bio").value.trim();
+let password=document.getElementById("password").value;
+let confirmPassword=document.getElementById("confirmPassword").value;
 
-    let email =
-    document.getElementById("email").value.trim();
+if(
+name==="" ||
+email==="" ||
+contact==="" ||
+role==="" ||
+password==="" ||
+confirmPassword===""){
 
-    let password =
-    document.getElementById("password").value;
+alert("Please fill all fields.");
+return;
 
-    if(name==="" || email==="" || password===""){
+}
 
-        alert("Please fill all fields.");
+if(password!==confirmPassword){
 
-        return;
+alert("Passwords do not match.");
+return;
 
-    }
+}
 
-    let savedUser =
-    JSON.parse(localStorage.getItem("user"));
+let savedUser=
+JSON.parse(localStorage.getItem("user"));
 
-    if(savedUser && savedUser.email===email){
+if(savedUser && savedUser.email===email){
 
-        alert("Email is already registered.");
+alert("Email already registered.");
+return;
 
-        return;
+}
 
-    }
+let user={
 
-    let user = {
+name:name,
+email:email,
+contact:contact,
+role:role,
+bio:bio,
+password:password
 
-        name:name,
-        email:email,
-        password:password
+};
 
-    };
+localStorage.setItem(
+"user",
+JSON.stringify(user)
+);
 
-    localStorage.setItem(
-        "user",
-        JSON.stringify(user)
-    );
+alert("Registration Successful!");
 
-    alert("Registration Successful!");
-
-    window.location.href="login.html";
+window.location.href="login.html";
 
 }
 

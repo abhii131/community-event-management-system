@@ -28,6 +28,7 @@ nav{
     justify-content:center;
     flex-wrap:wrap;
     gap:12px;
+    align-items:center;
 }
 
 nav a{
@@ -43,11 +44,65 @@ nav a:hover{
     background:rgba(255,255,255,.2);
 }
 
+/* Hero */
+
+.hero{
+    width:90%;
+    max-width:1200px;
+    margin:30px auto;
+    text-align:center;
+    background:#fff;
+    padding:40px 25px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.hero h1{
+    font-size:38px;
+    color:#0077ff;
+    margin-bottom:15px;
+}
+
+.hero p{
+    font-size:18px;
+    color:#666;
+    margin-bottom:25px;
+}
+
+/* Statistics */
+
+.stats{
+    width:90%;
+    max-width:1200px;
+    margin:25px auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.stat-card{
+    background:#fff;
+    padding:25px;
+    text-align:center;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.stat-card h2{
+    font-size:35px;
+    color:#0077ff;
+}
+
+.stat-card p{
+    margin-top:10px;
+}
+
 /* Search */
 
 .search-container{
-    text-align:center;
-    margin:25px;
+    width:90%;
+    max-width:1200px;
+    margin:25px auto;
 }
 
 /* Container */
@@ -56,18 +111,22 @@ nav a:hover{
     width:90%;
     max-width:1200px;
     margin:auto;
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:20px;
     padding-bottom:30px;
+}
+
+/* Event Grid */
+
+#dynamicEvents{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+    gap:25px;
 }
 
 /* Card */
 
 .card{
     background:#fff;
-    width:350px;
+    width:100%;
     border-radius:12px;
     padding:20px;
     box-shadow:0 5px 15px rgba(0,0,0,.1);
@@ -94,10 +153,23 @@ nav a:hover{
     line-height:1.5;
 }
 
+/* Badge */
+
+.badge{
+    display:inline-block;
+    background:#0077ff;
+    color:white;
+    padding:6px 14px;
+    border-radius:30px;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
 /* Form */
 
 input,
-textarea{
+textarea,
+select{
     width:100%;
     padding:12px;
     border:1px solid #ccc;
@@ -112,18 +184,23 @@ textarea{
 }
 
 input:focus,
-textarea:focus{
+textarea:focus,
+select:focus{
     border-color:#0077ff;
 }
-
-/* File Input */
 
 input[type=file]{
     border:none;
     padding:5px;
+    background:none;
 }
 
-/* Button */
+input[type="checkbox"]{
+    width:auto;
+    margin-right:8px;
+}
+
+/* Buttons */
 
 button{
     background:#0077ff;
@@ -142,6 +219,11 @@ button:hover{
     background:#005ecb;
 }
 
+.card button{
+    width:100%;
+    margin-top:12px;
+}
+
 /* Profile */
 
 #profileImage{
@@ -152,14 +234,29 @@ button:hover{
     border:4px solid #0077ff;
 }
 
+/* Links */
+
+a{
+    color:#0077ff;
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
 /* Footer */
 
 footer{
     background:#222;
     color:white;
     text-align:center;
-    padding:15px;
+    padding:20px;
     margin-top:40px;
+}
+
+footer h3{
+    margin-bottom:10px;
 }
 
 /* Dark Mode */
@@ -177,13 +274,20 @@ footer{
     background:#374151;
 }
 
-.dark-mode .card{
+.dark-mode .hero,
+.dark-mode .card,
+.dark-mode .stat-card{
     background:#1f2937;
     color:white;
 }
 
+.dark-mode .hero p{
+    color:#ddd;
+}
+
 .dark-mode input,
-.dark-mode textarea{
+.dark-mode textarea,
+.dark-mode select{
     background:#374151;
     color:white;
     border:1px solid #555;
@@ -191,6 +295,10 @@ footer{
 
 .dark-mode footer{
     background:#000;
+}
+
+.dark-mode a{
+    color:#60a5fa;
 }
 
 /* Mobile */
@@ -210,6 +318,14 @@ nav{
     align-items:center;
 }
 
+.hero h1{
+    font-size:28px;
+}
+
+.hero p{
+    font-size:16px;
+}
+
 .card{
     width:100%;
 }
@@ -217,6 +333,14 @@ nav{
 button{
     width:100%;
     margin-right:0;
+}
+
+#dynamicEvents{
+    grid-template-columns:1fr;
+}
+
+.stats{
+    grid-template-columns:1fr;
 }
 
 }

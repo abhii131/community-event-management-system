@@ -3,15 +3,14 @@
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Events</title>
+<title>My Events</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
 
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 
@@ -19,203 +18,383 @@
 
 <header>
 
-    <h1>My Registered Events</h1>
+<h1>My Registered Events</h1>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="profile.html">Profile</a>
-    </nav>
+<nav>
+
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="profile.html">Profile</a>
+
+</nav>
 
 </header>
 
 <div class="container">
 
-    <div id="eventContainer"></div>
+<div id="eventContainer"></div>
 
 </div>
 
 <script>
 
-let events =
-JSON.parse(localStorage.getItem("registeredEvents")) || [];
+if(localStorage.getItem("loggedIn")!=="true"){
 
-let user =
-JSON.parse(localStorage.getItem("user")) || {
-    name:"User"
-};
+alert("Please login first!");
 
-let container =
-document.getElementById("eventContainer");
-
-if(events.length===0){
-
-    container.innerHTML=`
-
-    <div class="card">
-
-        <h2>No Events Registered Yet</h2>
-
-    </div>
-
-    `;
-
-}else{
-
-    events.forEach((event,index)=>{
-
-        container.innerHTML += `
-
-        <div class="card">
-
-            <h2>${event}</h2>
-
-            <button onclick="downloadCertificate('${event}')">
-                Download Certificate
-            </button>
-
-            <br><br>
-
-            <button onclick="removeEvent(${index})">
-                Remove Registration
-            </button>
-
-        </div>
-
-        `;
-
-    });
+window.location.href="login.html";
 
 }
 
-function removeEvent(index){
+let registeredEvents=
+JSON.parse(localStorage.getItem("registeredEvents")) || [];
 
-    let events =
-    JSON.parse(localStorage.getItem("registeredEvents")) || [];
+let events=
+JSON.parse(localStorage.getItem("events")) || [];
 
-    events.splice(index,1);
+let user=
+JSON.parse(localStorage.getItem("user")) || {};
 
-    localStorage.setItem(
-        "registeredEvents",
-        JSON.stringify(events)
-    );
+let container=
+document.getElementById("eventContainer");
 
-    alert("Registration Removed!");
+if(registeredEvents.length===0){
 
-    location.reload();
+container.innerHTML=`
+
+<div class="card">
+
+<h2>No Registered Events</h2>
+
+<p>
+
+You have not registered for any event.
+
+</p>
+
+</div>
+
+`;
+
+}else{
+
+registeredEvents.forEach((eventName,index)=>{
+
+let event=
+events.find(e=>e.name===eventName);
+
+if(!event) return;
+
+let status=
+
+new Date(event.date)>=new Date()
+
+? "Upcoming"
+
+: "Completed";
+
+let registrationDate=
+new Date().toLocaleDateString();
+
+container.innerHTML+=`
+
+<div class="card">
+
+<img
+src="${event.image || 'https://picsum.photos/500/300'}">
+
+<h2>${event.name}</h2>
+
+<span class="badge">
+
+${event.category}
+
+</span>
+
+<p>
+
+<b>Organizer:</b>
+
+${event.organizer}
+
+</p>
+
+<p>
+
+<b>Date:</b>
+
+${event.date}
+
+</p>
+
+<p>
+
+<b>Location:</b>
+
+${event.location}
+
+</p>
+
+<p>
+
+<b>Status:</b>
+
+${status}
+
+</p>
+
+<p>
+
+<b>Registered On:</b>
+
+${registrationDate}
+
+</p>
+
+<p>
+
+<b>Participants:</b>
+
+${event.registered}/${event.capacity}
+
+</p>
+
+<p>
+
+${event.description}
+
+</p>
+
+<label>
+
+Rating
+
+</label>
+
+<select id="rating${index}">
+
+<option value="1">⭐ 1</option>
+
+<option value="2">⭐⭐ 2</option>
+
+<option value="3">⭐⭐⭐ 3</option>
+
+<option value="4">⭐⭐⭐⭐ 4</option>
+
+<option value="5">⭐⭐⭐⭐⭐ 5</option>
+
+</select>
+
+<br><br>
+
+<textarea
+id="feedback${index}"
+placeholder="Write your feedback"></textarea>
+
+<br><br>
+<button
+onclick="saveFeedback(${index})">
+
+Submit Feedback
+
+</button>
+
+<button
+onclick="downloadCertificate('${event.name}')">
+
+Download Certificate
+
+</button>
+
+<button
+onclick="removeRegistration(${index})">
+
+Remove Registration
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+function saveFeedback(index){
+
+let rating=
+document.getElementById("rating"+index).value;
+
+let feedback=
+document.getElementById("feedback"+index).value;
+
+let allFeedback=
+JSON.parse(localStorage.getItem("feedback")) || [];
+
+allFeedback.push({
+
+event:registeredEvents[index],
+rating:rating,
+feedback:feedback,
+user:user.name
+
+});
+
+localStorage.setItem(
+"feedback",
+JSON.stringify(allFeedback)
+);
+
+alert("Feedback Submitted Successfully!");
+
+}
+
+function removeRegistration(index){
+
+let events=
+JSON.parse(localStorage.getItem("events")) || [];
+
+let eventName=
+registeredEvents[index];
+
+let eventIndex=
+events.findIndex(e=>e.name===eventName);
+
+if(eventIndex!==-1 && events[eventIndex].registered>0){
+
+events[eventIndex].registered--;
+
+}
+
+registeredEvents.splice(index,1);
+
+localStorage.setItem(
+"registeredEvents",
+JSON.stringify(registeredEvents)
+);
+
+localStorage.setItem(
+"events",
+JSON.stringify(events)
+);
+
+alert("Registration Cancelled!");
+
+location.reload();
 
 }
 
 function downloadCertificate(eventName){
 
-    const { jsPDF } = window.jspdf;
+const { jsPDF } = window.jspdf;
 
-    const doc = new jsPDF("landscape");
+const doc=new jsPDF("landscape");
 
-    doc.setDrawColor(0,51,153);
-    doc.setLineWidth(2);
-    doc.rect(10,10,277,190);
+doc.setDrawColor(0,51,153);
+doc.setLineWidth(2);
+doc.rect(10,10,277,190);
 
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(26);
-    doc.setTextColor(0,51,153);
+doc.setFont("helvetica","bold");
+doc.setFontSize(26);
+doc.setTextColor(0,51,153);
 
-    doc.text(
-        "COMMUNITY EVENT MANAGEMENT SYSTEM",
-        148,
-        30,
-        {align:"center"}
-    );
+doc.text(
+"COMMUNITY EVENT MANAGEMENT SYSTEM",
+148,
+30,
+{align:"center"}
+);
 
-    doc.setFontSize(22);
-    doc.setTextColor(0,0,0);
+doc.setFontSize(22);
+doc.setTextColor(0,0,0);
 
-    doc.text(
-        "CERTIFICATE OF PARTICIPATION",
-        148,
-        50,
-        {align:"center"}
-    );
+doc.text(
+"CERTIFICATE OF PARTICIPATION",
+148,
+50,
+{align:"center"}
+);
 
-    doc.setFont("times","italic");
-    doc.setFontSize(16);
+doc.setFont("times","italic");
+doc.setFontSize(16);
 
-    doc.text(
-        "This certificate is proudly presented to",
-        148,
-        72,
-        {align:"center"}
-    );
+doc.text(
+"This certificate is proudly presented to",
+148,
+72,
+{align:"center"}
+);
 
-    doc.setFont("times","bold");
-    doc.setFontSize(28);
-    doc.setTextColor(153,0,0);
+doc.setFont("times","bold");
+doc.setFontSize(28);
+doc.setTextColor(153,0,0);
 
-    doc.text(
-        user.name,
-        148,
-        92,
-        {align:"center"}
-    );
+doc.text(
+user.name,
+148,
+92,
+{align:"center"}
+);
 
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(16);
-    doc.setTextColor(0,0,0);
+doc.setFont("helvetica","normal");
+doc.setFontSize(16);
+doc.setTextColor(0,0,0);
 
-    doc.text(
-        "for successfully participating in",
-        148,
-        110,
-        {align:"center"}
-    );
+doc.text(
+"for successfully participating in",
+148,
+110,
+{align:"center"}
+);
 
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(22);
-    doc.setTextColor(0,102,0);
+doc.setFont("helvetica","bold");
+doc.setFontSize(22);
+doc.setTextColor(0,102,0);
 
-    doc.text(
-        eventName,
-        148,
-        126,
-        {align:"center"}
-    );
+doc.text(
+eventName,
+148,
+126,
+{align:"center"}
+);
 
-    let today = new Date().toLocaleDateString();
+let today=
+new Date().toLocaleDateString();
 
-    doc.setFontSize(14);
-    doc.setTextColor(0,0,0);
+doc.setFontSize(14);
 
-    doc.text(
-        "Date: " + today,
-        30,
-        160
-    );
+doc.text(
+"Date: "+today,
+30,
+160
+);
 
-    doc.line(30,172,90,172);
-    doc.text(
-        "Event Coordinator",
-        30,
-        180
-    );
+doc.line(30,172,90,172);
+doc.text(
+"Event Coordinator",
+30,
+180
+);
 
-    doc.line(190,172,250,172);
-    doc.text(
-        "Project Administrator",
-        190,
-        180
-    );
+doc.line(190,172,250,172);
+doc.text(
+"Project Administrator",
+190,
+180
+);
 
-    doc.setFontSize(11);
-    doc.setTextColor(100);
+doc.setFontSize(11);
+doc.setTextColor(100);
 
-    doc.text(
-        "Community Event Management System © 2026",
-        148,
-        195,
-        {align:"center"}
-    );
+doc.text(
+"Community Event Management System © 2026",
+148,
+195,
+{align:"center"}
+);
 
-    doc.save(eventName + "_Certificate.pdf");
+doc.save(eventName+"_Certificate.pdf");
 
 }
 

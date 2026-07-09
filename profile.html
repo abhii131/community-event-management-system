@@ -3,12 +3,12 @@
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>User Profile</title>
+<title>User Profile</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -16,143 +16,215 @@
 
 <header>
 
-    <h1>User Profile</h1>
+<h1>User Profile</h1>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="my-events.html">My Events</a>
-    </nav>
+<nav>
+
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="my-events.html">My Events</a>
+
+</nav>
 
 </header>
 
 <div class="container">
 
-    <div class="card" style="text-align:center;">
+<div class="card" style="text-align:center;">
 
-        <img
-            id="profileImage"
-            src="https://ui-avatars.com/api/?name=User&size=150"
-            alt="Profile Photo"
-            width="150"
-            style="border-radius:50%;">
+<img
+id="profileImage"
+src="https://ui-avatars.com/api/?name=User&size=150"
+alt="Profile"
+width="150">
 
-        <br><br>
+<br><br>
 
-        <input
-            type="file"
-            id="profilePic"
-            accept="image/*">
+<input
+type="file"
+id="profilePic"
+accept="image/*">
 
-        <br><br>
+<br><br>
 
-        <h2>Welcome</h2>
+<h2>Edit Profile</h2>
 
-        <p>
-            <strong>Name:</strong>
-            <span id="name"></span>
-        </p>
+<input
+type="text"
+id="name"
+placeholder="Full Name">
 
-        <p>
-            <strong>Email:</strong>
-            <span id="email"></span>
-        </p>
+<br><br>
 
-        <p>
-            <strong>Total Registrations:</strong>
-            <span id="registrations">0</span>
-        </p>
+<input
+type="email"
+id="email"
+placeholder="Email">
 
-        <br>
+<br><br>
 
-        <button onclick="logout()">
-            Logout
-        </button>
+<input
+type="tel"
+id="contact"
+placeholder="Contact Number">
 
-    </div>
+<br><br>
+
+<select id="role">
+
+<option value="Participant">
+Participant
+</option>
+
+<option value="Organizer">
+Organizer
+</option>
+
+</select>
+
+<br><br>
+
+<textarea
+id="bio"
+placeholder="Write your bio"></textarea>
+
+<br><br>
+
+<p>
+
+<strong>Total Registrations :</strong>
+
+<span id="registrations">0</span>
+
+</p>
+
+<br>
+
+<button onclick="saveProfile()">
+
+Save Changes
+
+</button>
+
+<button onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
 
 </div>
 
 <script>
 
-let user =
-JSON.parse(localStorage.getItem("user"));
+if(localStorage.getItem("loggedIn")!=="true"){
 
-let registrations =
-JSON.parse(localStorage.getItem("registeredEvents")) || [];
+alert("Please login first!");
 
-if(!user){
-
-    alert("Please login first.");
-
-    window.location.href="login.html";
+window.location.href="login.html";
 
 }
 
-document.getElementById("name").innerText =
-user.name;
+let user=
+JSON.parse(localStorage.getItem("user"))||{};
 
-document.getElementById("email").innerText =
-user.email;
+let registrations=
+JSON.parse(localStorage.getItem("registeredEvents"))||[];
 
-document.getElementById("registrations").innerText =
+document.getElementById("registrations").innerText=
 registrations.length;
 
-/* Default Avatar */
+document.getElementById("name").value=
+user.name||"";
 
-let savedImage =
+document.getElementById("email").value=
+user.email||"";
+
+document.getElementById("contact").value=
+user.contact||"";
+
+document.getElementById("role").value=
+user.role||"Participant";
+
+document.getElementById("bio").value=
+user.bio||"";
+
+let savedImage=
 localStorage.getItem("profileImage");
 
 if(savedImage){
 
-    document.getElementById("profileImage").src =
-    savedImage;
+document.getElementById("profileImage").src=
+savedImage;
 
 }else{
 
-    document.getElementById("profileImage").src =
-    "https://ui-avatars.com/api/?name=" +
-    encodeURIComponent(user.name) +
-    "&size=150";
+document.getElementById("profileImage").src=
+"https://ui-avatars.com/api/?name="+
+encodeURIComponent(user.name||"User")+
+"&size=150";
 
 }
-
-/* Upload Photo */
 
 document.getElementById("profilePic")
 .addEventListener("change",function(){
 
-    let file = this.files[0];
+let file=this.files[0];
 
-    if(!file) return;
+if(!file) return;
 
-    let reader = new FileReader();
+let reader=new FileReader();
 
-    reader.onload = function(e){
+reader.onload=function(e){
 
-        document.getElementById("profileImage").src =
-        e.target.result;
+document.getElementById("profileImage").src=
+e.target.result;
 
-        localStorage.setItem(
-            "profileImage",
-            e.target.result
-        );
+localStorage.setItem(
+"profileImage",
+e.target.result
+);
 
-    };
+};
 
-    reader.readAsDataURL(file);
+reader.readAsDataURL(file);
 
 });
 
-/* Logout */
+function saveProfile(){
+
+user.name=
+document.getElementById("name").value;
+
+user.email=
+document.getElementById("email").value;
+
+user.contact=
+document.getElementById("contact").value;
+
+user.role=
+document.getElementById("role").value;
+
+user.bio=
+document.getElementById("bio").value;
+
+localStorage.setItem(
+"user",
+JSON.stringify(user)
+);
+
+alert("Profile Updated Successfully!");
+
+}
 
 function logout(){
 
-    localStorage.removeItem("loggedIn");
+localStorage.removeItem("loggedIn");
 
-    alert("Logged Out Successfully!");
+alert("Logged Out Successfully!");
 
-    window.location.href="login.html";
+window.location.href="login.html";
 
 }
 
