@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Feedback & Rating</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Feedback & Rating</h1>
+
+<nav>
+
+<a href="index.html">Home</a>
+<a href="my-events.html">My Events</a>
+<a href="profile.html">Profile</a>
+<a href="notifications.html">
+
+Notifications
+
+</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Submit Feedback</h2>
+
+<form id="feedbackForm">
+
+<input
+type="text"
+id="eventName"
+readonly>
+
+<br><br>
+
+<select id="rating" required>
+
+<option value="">Select Rating</option>
+<option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+<option value="4">⭐⭐⭐⭐ Very Good</option>
+<option value="3">⭐⭐⭐ Good</option>
+<option value="2">⭐⭐ Fair</option>
+<option value="1">⭐ Poor</option>
+
+</select>
+
+<br><br>
+
+<textarea
+id="comment"
+placeholder="Write your feedback..."
+required></textarea>
+
+<br><br>
+
+<button type="submit">
+
+Submit Feedback
+
+</button>
+
+</form>
+
+</div>
+
+<div class="card">
+
+<h2>Previous Feedback</h2>
+
+<div id="feedbackList"></div>
+
+</div>
+
+</div>
+
+<script>
+
+let selectedEvent =
+localStorage.getItem("feedbackEvent") || "";
+
+document.getElementById("eventName").value =
+selectedEvent;
+
+let feedbacks =
+JSON.parse(localStorage.getItem("feedbacks")) || [];
+
+function loadFeedback(){
+
+let list =
+document.getElementById("feedbackList");
+
+list.innerHTML = "";
+
+let eventFeedbacks =
+feedbacks.filter(item => item.event === selectedEvent);
+
+if(eventFeedbacks.length===0){
+
+list.innerHTML =
+"<p>No feedback submitted for this event.</p>";
+
+return;
+
+}
+
+eventFeedbacks.forEach((item,index)=>{
+
+list.innerHTML += `
+
+<div class="card">
+
+<h3>${item.event}</h3>
+
+<p><strong>Rating:</strong> ${"⭐".repeat(Number(item.rating))}</p>
+
+<p>${item.comment}</p>
+
+<br>
+
+<button onclick="deleteFeedback(${feedbacks.indexOf(item)})">
+
+Delete Feedback
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+document.getElementById("feedbackForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let feedback={
+
+event:
+document.getElementById("eventName").value,
+
+rating:
+document.getElementById("rating").value,
+
+comment:
+document.getElementById("comment").value
+
+};
+
+feedbacks.push(feedback);
+
+localStorage.setItem(
+
+"feedbacks",
+
+JSON.stringify(feedbacks)
+
+);
+
+alert("Feedback Submitted Successfully!");
+
+this.reset();
+
+document.getElementById("eventName").value =
+selectedEvent;
+
+loadFeedback();
+
+});
+
+function deleteFeedback(index){
+
+if(confirm("Delete this feedback?")){
+
+feedbacks.splice(index,1);
+
+localStorage.setItem(
+
+"feedbacks",
+
+JSON.stringify(feedbacks)
+
+);
+
+loadFeedback();
+
+}
+
+}
+
+loadFeedback();
+
+</script>
+
+</body>
+
+</html>

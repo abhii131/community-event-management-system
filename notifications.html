@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Notifications</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Notifications</h1>
+
+<nav>
+
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="profile.html">Profile</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Recent Notifications</h2>
+
+<div id="notificationList"></div>
+
+<br>
+
+<button onclick="clearNotifications()">
+
+Clear All Notifications
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+if(localStorage.getItem("loggedIn")!=="true"){
+
+window.location.href="login.html";
+
+}
+
+let notifications=
+
+JSON.parse(localStorage.getItem("notifications")) || [];
+
+function loadNotifications(){
+
+let list=
+
+document.getElementById("notificationList");
+
+list.innerHTML="";
+
+if(notifications.length===0){
+
+list.innerHTML="<p>No Notifications</p>";
+
+return;
+
+}
+
+notifications.reverse().forEach(item=>{
+
+list.innerHTML+=`
+
+<div style="padding:12px;border-bottom:1px solid #ddd;">
+
+<p>${item.message}</p>
+
+<small>${item.time}</small>
+
+</div>
+
+`;
+
+});
+
+}
+
+function clearNotifications(){
+
+if(confirm("Clear all notifications?")){
+
+localStorage.removeItem("notifications");
+
+location.reload();
+
+}
+
+}
+
+loadNotifications();
+
+</script>
+
+</body>
+
+</html>

@@ -25,6 +25,12 @@
 <a href="create-event.html">Create Event</a>
 <a href="my-events.html">My Events</a>
 <a href="profile.html">Profile</a>
+<a href="calendar.html">Calendar</a>
+<a href="notifications.html">
+
+Notifications
+
+</a>
 
 <button onclick="toggleDarkMode()">
 
@@ -397,6 +403,22 @@ localStorage.setItem(
 
 JSON.stringify(events)
 
+);
+
+let notifications =
+JSON.parse(localStorage.getItem("notifications")) || [];
+
+notifications.push({
+
+message:"✅ Registered for " + event.name,
+
+time:new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"notifications",
+JSON.stringify(notifications)
 );
 
 alert("Registration Successful!");

@@ -22,6 +22,8 @@
 
 <a href="index.html">Home</a>
 <a href="dashboard.html">Dashboard</a>
+<a href="calendar.html">Calendar</a>
+<a href="notifications.html">Notifications</a>
 <a href="my-events.html">My Events</a>
 
 </nav>
@@ -123,7 +125,7 @@ window.location.href="login.html";
 }
 
 let user=
-JSON.parse(localStorage.getItem("user"))||{};
+JSON.parse(localStorage.getItem("user")) || {};
 
 document.getElementById("organizer").value=
 user.name || "";
@@ -134,33 +136,34 @@ new Date().toISOString().split("T")[0];
 let events=
 JSON.parse(localStorage.getItem("events")) || [];
 
-let editIndex = localStorage.getItem("editIndex");
+let editIndex=
+localStorage.getItem("editIndex");
 
-if (editIndex !== null && events[editIndex]) {
+if(editIndex!==null && events[editIndex]){
 
-    let event = events[editIndex];
+let event=events[editIndex];
 
-    document.getElementById("eventName").value = event.name;
-    document.getElementById("eventDate").value = event.date;
-    document.getElementById("eventLocation").value = event.location;
-    document.getElementById("eventCategory").value = event.category;
-    document.getElementById("eventDescription").value = event.description;
-    document.getElementById("eventCapacity").value = event.capacity;
-    document.getElementById("organizer").value = event.organizer;
+document.getElementById("eventName").value=event.name;
+document.getElementById("eventDate").value=event.date;
+document.getElementById("eventLocation").value=event.location;
+document.getElementById("eventCategory").value=event.category;
+document.getElementById("eventDescription").value=event.description;
+document.getElementById("eventCapacity").value=event.capacity;
+document.getElementById("organizer").value=event.organizer;
 
-} else {
+}else{
 
-    editIndex = null;
-    localStorage.removeItem("editIndex");
+editIndex=null;
+localStorage.removeItem("editIndex");
 
 }
 
-document.getElementById("eventForm")
-.addEventListener("submit",function(e){
+document.getElementById("eventForm").addEventListener("submit",function(e){
 
 e.preventDefault();
 
-let image=document.getElementById("eventImage").files[0];
+let image=
+document.getElementById("eventImage").files[0];
 
 if(image){
 
@@ -195,13 +198,25 @@ function saveEvent(image){
 let event={
 
 name:document.getElementById("eventName").value,
+
 date:document.getElementById("eventDate").value,
+
 location:document.getElementById("eventLocation").value,
+
 category:document.getElementById("eventCategory").value,
+
 description:document.getElementById("eventDescription").value,
-capacity:parseInt(document.getElementById("eventCapacity").value),
-registered:editIndex!==null ? events[editIndex].registered : 0,
-organizer:document.getElementById("organizer").value,
+
+capacity:Number(document.getElementById("eventCapacity").value),
+
+registered:
+editIndex!==null
+? events[editIndex].registered
+: 0,
+
+organizer:
+document.getElementById("organizer").value,
+
 image:image
 
 };
@@ -209,6 +224,7 @@ image:image
 if(editIndex!==null){
 
 events[editIndex]=event;
+
 localStorage.removeItem("editIndex");
 
 }else{
@@ -220,6 +236,24 @@ events.push(event);
 localStorage.setItem(
 "events",
 JSON.stringify(events)
+);
+
+/* Save Notification */
+
+let notifications=
+JSON.parse(localStorage.getItem("notifications")) || [];
+
+notifications.push({
+
+message:"📅 New Event Created: " + event.name,
+
+time:new Date().toLocaleString()
+
+});
+
+localStorage.setItem(
+"notifications",
+JSON.stringify(notifications)
 );
 
 alert("Event Saved Successfully!");

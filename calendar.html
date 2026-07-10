@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Event Calendar</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+.calendar{
+    width:90%;
+    max-width:1200px;
+    margin:30px auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#0077ff;
+    color:white;
+    padding:15px;
+}
+
+td{
+    border:1px solid #ddd;
+    height:90px;
+    vertical-align:top;
+    padding:8px;
+}
+
+.today{
+    background:#d9ecff;
+    font-weight:bold;
+}
+
+.event{
+    background:#28a745;
+    color:white;
+    padding:3px;
+    border-radius:5px;
+    margin-top:5px;
+    font-size:12px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Event Calendar</h1>
+
+<nav>
+
+<a href="index.html">Home</a>
+<a href="dashboard.html">Dashboard</a>
+<a href="my-events.html">My Events</a>
+
+</nav>
+
+</header>
+
+<div class="calendar">
+
+<h2 id="monthYear"></h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Sun</th>
+<th>Mon</th>
+<th>Tue</th>
+<th>Wed</th>
+<th>Thu</th>
+<th>Fri</th>
+<th>Sat</th>
+
+</tr>
+
+</thead>
+
+<tbody id="calendarBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Upcoming Events</h2>
+
+<div id="eventList"></div>
+
+</div>
+
+</div>
+
+<script>
+
+if(localStorage.getItem("loggedIn")!=="true"){
+
+window.location.href="login.html";
+
+}
+
+let events=
+JSON.parse(localStorage.getItem("events")) || [];
+
+const today=new Date();
+
+const year=today.getFullYear();
+const month=today.getMonth();
+
+const monthNames=[
+"January","February","March","April",
+"May","June","July","August",
+"September","October","November","December"
+];
+
+document.getElementById("monthYear").innerText=
+monthNames[month]+" "+year;
+
+let firstDay=
+new Date(year,month,1).getDay();
+
+let lastDate=
+new Date(year,month+1,0).getDate();
+
+let body=
+document.getElementById("calendarBody");
+
+let row=document.createElement("tr");
+
+for(let i=0;i<firstDay;i++){
+
+row.innerHTML+="<td></td>";
+
+}
+
+for(let day=1;day<=lastDate;day++){
+
+if((firstDay+day-1)%7===0 && day!==1){
+
+body.appendChild(row);
+
+row=document.createElement("tr");
+
+}
+
+let td=document.createElement("td");
+
+td.innerHTML="<strong>"+day+"</strong>";
+
+if(
+day===today.getDate()
+){
+
+td.classList.add("today");
+
+}
+
+events.forEach(event=>{
+
+let d=new Date(event.date);
+
+if(
+d.getDate()===day &&
+d.getMonth()===month &&
+d.getFullYear()===year
+){
+
+td.innerHTML+=
+"<div class='event'>"+event.name+"</div>";
+
+}
+
+});
+
+row.appendChild(td);
+
+}
+
+body.appendChild(row);
+
+let list=
+document.getElementById("eventList");
+
+if(events.length===0){
+
+list.innerHTML="No Events";
+
+}else{
+
+events.forEach(event=>{
+
+list.innerHTML+=`
+
+<p>
+
+<b>${event.name}</b>
+
+<br>
+
+📅 ${event.date}
+
+<br>
+
+📍 ${event.location}
+
+</p>
+
+<hr>
+
+`;
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>
